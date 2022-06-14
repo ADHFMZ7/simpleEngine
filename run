@@ -1,2 +1,0 @@
-#!/bin/zsh
-g++ -municode -std=c++17 -I/Library/Frameworks/SDL2.framework/Versions/A/Headers "$1"

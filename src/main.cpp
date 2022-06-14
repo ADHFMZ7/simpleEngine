@@ -1,60 +1,55 @@
-#define OLC_PGE_APPLICATION
-#include <vector>
-#include "olcPixelGameEngine.h"
+#ifdef __APPLE__
+// Defined before OpenGL and GLUT includes to avoid deprecation messages
+#define GL_SILENCE_DEPRECATION
+#include <GLFW/glfw3.h>
+#endif
 
 
-struct vec3d {
-    float x, y, z;
-};
-
-struct triangle {
-    vec3d p[3];
-};
-
-struct mesh {
-    std::vector<triangle> tris;
-};
-
-
-
-
-
-
-
-
-
-class Example : public olc::PixelGameEngine
+int main(void)
 {
-public:
-	Example()
-	{
-		sAppName = "Example";
-	}
+    GLFWwindow* window;
 
-public:
-	bool OnUserCreate() override
-	{
-		// Called once at the start, so create things here
+    /* Initialize the library */
+    if (!glfwInit())
+        return -1;
+
+    /* Create a windowed mode window and its OpenGL context */
+    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    if (!window)
+    {
+        glfwTerminate();
+        return -1;
+    }
+
+    /* Make the window's context current */
+    glfwMakeContextCurrent(window);
+
+    /* Loop until the user closes the window */
+    while (!glfwWindowShouldClose(window))
+    {
+        /* Render here */
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glBegin(GL_TRIANGLES);
+        glVertex2f(-0.1f, -0.1f);
+        glVertex2f(0.1f, 0.01f);
+        glVertex2f(-0.1f, 0.1f);
+        glEnd();
+
+        glBegin(GL_TRIANGLES);
+        glVertex2f(0.1f, 0.1f);
+        glVertex2f(-0.1f, -0.01f);
+        glVertex2f(+0.1f, -0.1f);
+        glEnd();
 
 
-		return true;
-	}
+        /* Swap front and back buffers */
+        glfwSwapBuffers(window);
 
-	bool OnUserUpdate(float fElapsedTime) override
-	{
-		// called once per frame
+        /* Poll for and process events */
+        glfwPollEvents();
+    }
 
-
-		return true;
-	}
-};
-
-
-int main()
-{
-	Example demo;
-	if (demo.Construct(156, 140, 4, 4))
-		demo.Start();
-
-	return 0;
+    glfwTerminate();
+    return 0;
 }
