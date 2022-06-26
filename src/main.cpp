@@ -1,55 +1,29 @@
-#ifdef __APPLE__
-// Defined before OpenGL and GLUT includes to avoid deprecation messages
-#define GL_SILENCE_DEPRECATION
-#include <GLFW/glfw3.h>
-#endif
+#include <SFML/Graphics.hpp>
+
+int main() {
+  sf::RenderWindow window(sf::VideoMode(900, 900), "simpleEngine");
 
 
-int main(void)
-{
-    GLFWwindow* window;
-
-    /* Initialize the library */
-    if (!glfwInit())
-        return -1;
-
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-    if (!window)
+  while(window.isOpen()) 
+  {
+    sf::Event event;
+    while(window.pollEvent(event)) 
     {
-        glfwTerminate();
-        return -1;
+      if(event.type == sf::Event::Closed) 
+      {
+        window.close();
+      }
     }
+    window.clear(sf::Color::Black);
+   
+    sf::CircleShape shape(100.f);
 
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
+    shape.setFillColor(sf::Color(100, 250, 50));
 
-    /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
-    {
-        /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+    window.draw(shape);
 
-        glBegin(GL_TRIANGLES);
-        glVertex2f(-0.1f, -0.1f);
-        glVertex2f(0.1f, 0.01f);
-        glVertex2f(-0.1f, 0.1f);
-        glEnd();
+    window.display(); 
 
-        glBegin(GL_TRIANGLES);
-        glVertex2f(0.1f, 0.1f);
-        glVertex2f(-0.1f, -0.01f);
-        glVertex2f(+0.1f, -0.1f);
-        glEnd();
-
-
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
-
-        /* Poll for and process events */
-        glfwPollEvents();
-    }
-
-    glfwTerminate();
-    return 0;
+  }
+  return 0;
 }

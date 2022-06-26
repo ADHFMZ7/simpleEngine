@@ -1,0 +1,4 @@
+#!/bin/zsh
+
+g++ "$1" -o prog -std=c++17 -I/opt/homebrew/Cellar/sfml/2.5.1_1/include/ -L/opt/homebrew/Cellar/sfml/2.5.1_1/lib -lsfml-window -lsfml-system -lsfml-audio -lsfml-graphics
+
