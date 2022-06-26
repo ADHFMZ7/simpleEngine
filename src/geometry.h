@@ -1,17 +1,19 @@
+#ifndef GEOMETRY
+#define GEOMETRY
 #include <iostream>
 #include <vector>
+#include <Eigen/dense>
 
-struct Point 
-{
-  float x, y, z;
-};
+
 
 struct Triangle
 {
-  Point p[3];
+  Eigen::Vector3f p[3];
 };
 
 struct Mesh {
   std::vector<Triangle> tris;
 };
 
+
+#endif

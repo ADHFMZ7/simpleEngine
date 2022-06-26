@@ -1,29 +1,39 @@
-#include <SFML/Graphics.hpp>
+#ifdef __APPLE__
+// Defined before OpenGL and GLUT includes to avoid deprecation messages
+#define GL_SILENCE_DEPRECATION
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#endif
+
+#include <iostream>
+#include "geometry.h"
+#include "objParse.h"
+
 
 int main() {
-  sf::RenderWindow window(sf::VideoMode(900, 900), "simpleEngine");
+  
+  glfwInit();  
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-
-  while(window.isOpen()) 
+  GLFWwindow* window = glfwCreateWindow(800, 800, "opengl", NULL, NULL);
+  if(window == NULL) 
   {
-    sf::Event event;
-    while(window.pollEvent(event)) 
-    {
-      if(event.type == sf::Event::Closed) 
-      {
-        window.close();
-      }
-    }
-    window.clear(sf::Color::Black);
-   
-    sf::CircleShape shape(100.f);
+    glfwTerminate();
+    return -1;
+  }
+  glfwMakeContextCurrent(window);
 
-    shape.setFillColor(sf::Color(100, 250, 50));
+  gladLoadGL();
 
-    window.draw(shape);
-
-    window.display(); 
+  while(!glfwWindowShouldClose(window)) 
+  {
+    glfwPollEvents();
 
   }
+
+  glfwDestroyWindow(window);
+  glfwTerminate();
   return 0;
 }
