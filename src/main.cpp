@@ -11,7 +11,6 @@
 
 
 int main() {
-  
   glfwInit();  
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -26,9 +25,18 @@ int main() {
   glfwMakeContextCurrent(window);
 
   gladLoadGL();
+  glViewport(0, 0, 800, 800);
 
+  std::vector<Eigen::Vector3f> obj = parseObj("../assets/cube.obj");
+
+
+
+  
   while(!glfwWindowShouldClose(window)) 
   {
+    glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glfwSwapBuffers(window);
     glfwPollEvents();
 
   }
