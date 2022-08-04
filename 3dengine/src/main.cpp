@@ -5,12 +5,25 @@
 
 #include <iostream>
 #include "geometry.h"
-#include "objParse.h"
 #include "input.h"
 
 
-#define WIDTH 1800
-#define HEIGHT 800
+#define WIDTH 800
+#define HEIGHT 600
+
+const char *vertexShaderSource = "#version 330 core\n"
+    "layout (location = 0) in vec3 aPos;\n"
+    "void main()\n"
+    "{\n"
+    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+    "}\0";
+
+const char *fragmentShaderSource = "#version 330 core\n"
+"out vec4 FragColor;\n"
+"void main()\n"
+"{\n"
+"    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+"} \0";
 
 int main() {
 
@@ -34,27 +47,71 @@ int main() {
   gladLoadGL();
   glViewport(0, 0, WIDTH, HEIGHT);
 
-  std::vector<Eigen::Vector3f> obj = parseObj("../assets/cube.obj");
+  // Creates an array of vertices
+  // These are in "normalized 
+  // device coordinates" which 
+  // means they are in the safe
+  // region of (-1, 1)
+  float vertices[] = {
+    -0.5f, -0.5f, 0.0f,
+     0.5f, -0.5f, 0.0f,
+     0.0f,  0.5f, 0.0f
+  };  
 
-  for (int i = 0; i < 8; i++) 
+  // Creates a VBO; Vertex
+  // Buffer Object and binds
+  // it to the array buffer target.
+  // it then adds the vertices
+  // array to the buffer.
+  unsigned int VBO;
+  glGenBuffers(1, &VBO);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+
+  // Creates a vertex shader id
+  // and adds the GLSL code to
+  // it. then compiles shader
+  unsigned int vertexShader;
+  vertexShader = glCreateShader(GL_VERTEX_SHADER);
+  glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+  glCompileShader(vertexShader);
+
+  // This creates a fragment shader
+  unsigned int fragmentShader;
+  fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+  glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+  glCompileShader(fragmentShader);
+
+  int  success;
+  char infoLog[512];
+  glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+
+  if(!success)
   {
-    std::cout << obj[i] << "\n"; 
+    glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+    std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
   }
-  
+
+
   while(!glfwWindowShouldClose(window)) 
   {
+    // Takes user input
+    processInput(window); 
+    
+    // 
     glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    glfwSwapBuffers(window);
+
+    // Check for events and swap buffers
     glfwPollEvents();
-    processInput(window); 
+    glfwSwapBuffers(window);
   }
 
   glfwDestroyWindow(window);
   glfwTerminate();
   return 0;
 }
-
 
 
 
