@@ -1,23 +1,29 @@
-#ifdef __APPLE__
 // Defined before OpenGL and GLUT includes to avoid deprecation messages
 #define GL_SILENCE_DEPRECATION
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#endif
 
 #include <iostream>
 #include "geometry.h"
 #include "objParse.h"
+#include "input.h"
 
 
+#define WIDTH 1800
+#define HEIGHT 800
 
 int main() {
+
+
+  // Initializes and configures glfw 
   glfwInit();  
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  GLFWwindow* window = glfwCreateWindow(800, 800, "opengl", NULL, NULL);
+
+  // Creates window
+  GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "opengl", NULL, NULL);
   if(window == NULL) 
   {
     glfwTerminate();
@@ -26,7 +32,7 @@ int main() {
   glfwMakeContextCurrent(window);
 
   gladLoadGL();
-  glViewport(0, 0, 800, 800);
+  glViewport(0, 0, WIDTH, HEIGHT);
 
   std::vector<Eigen::Vector3f> obj = parseObj("../assets/cube.obj");
 
@@ -41,10 +47,14 @@ int main() {
     glClear(GL_COLOR_BUFFER_BIT);
     glfwSwapBuffers(window);
     glfwPollEvents();
-
+    processInput(window); 
   }
 
   glfwDestroyWindow(window);
   glfwTerminate();
   return 0;
 }
+
+
+
+
